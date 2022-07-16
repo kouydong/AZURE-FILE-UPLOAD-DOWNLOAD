@@ -51,14 +51,12 @@ public class AzureController {
                 // Blob파일 커넥션 스트링
                 .connectionString(connectionString)
                 // 파일 경로(이게 모듈별로 서로 다른지 확인 필요)
-                .containerName("apthome/APTi.Web.Front/ProFile")
+                .containerName("apthome/APTi.Web.Front/Profile")
                 .buildClient();
-        // 현재 날짜 가지고 오기
-        String now = new SimpleDateFormat("yyyyMMddHmsS").format(new Date());
+        String now = new SimpleDateFormat("yyyyMMddHHmmS").format(new Date());
         // 파일 이름 변경
         String fileName = now + "_" + file.getOriginalFilename();
         // 파일 객체의 파일을 Blob 컨테이너에 할당
-
         BlobClient blob = container.getBlobClient(fileName);
         // 파일 업로드 진행
         blob.upload(file.getInputStream(), file.getSize(), true);
