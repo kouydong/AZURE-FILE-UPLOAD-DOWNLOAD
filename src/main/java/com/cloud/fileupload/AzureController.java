@@ -13,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Controller
 public class AzureController {
@@ -44,20 +46,25 @@ public class AzureController {
     @PostMapping("/uploadOriginFile")
     public void upload(@RequestParam("fileName") MultipartFile file) throws IOException {
         // 추후 빌드 환경으로 설정 필요
-        //System.out.println(connectionString);
-
+        System.out.println(connectionString);
         BlobContainerClient container = new BlobContainerClientBuilder()
                 // Blob파일 커넥션 스트링
                 .connectionString(connectionString)
                 // 파일 경로(이게 모듈별로 서로 다른지 확인 필요)
-                .containerName("apthome/하위 파일 경로 설정 필요")
+                .containerName("apthome/APTi.Web.Front/ProFile")
                 .buildClient();
+        // 현재 날짜 가지고 오기
+        String now = new SimpleDateFormat("yyyyMMddHmsS").format(new Date());
+        // 파일 이름 변경
+        String fileName = now + "_" + file.getOriginalFilename();
         // 파일 객체의 파일을 Blob 컨테이너에 할당
-        BlobClient blob = container.getBlobClient(file.getOriginalFilename());
+
+        BlobClient blob = container.getBlobClient(fileName);
         // 파일 업로드 진행
         blob.upload(file.getInputStream(), file.getSize(), true);
-
         System.out.print("파일 업로드 성공");
+        // To do list : 파일 저장 프로시저 호출 로직 구현
+
     }
 
     // Blob 형태의 파일 업로드
